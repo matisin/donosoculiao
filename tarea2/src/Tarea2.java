@@ -16,8 +16,8 @@ public class Tarea2 {
      */
     public static void main(String[] args) {
         BufferedReaderExample br = new BufferedReaderExample();
-        br.checkText("archivos/text");
-        br.
+        br.checkText("tarea2/archivos/text");
+
     }
 
 }
