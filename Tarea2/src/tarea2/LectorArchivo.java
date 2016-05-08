@@ -16,9 +16,10 @@ public class LectorArchivo {
         this.br = new BufferedReader(new FileReader(archivo));
     }
 
-    public void descartarNucleotidos(int Q,String archivo) throws IOException {
+    public void descartarNucleotidos(int Q, String archivo) throws IOException {
         int nlinea = 0;
         ArrayList nucleotidos = new ArrayList();
+        ArrayList indices = new ArrayList();
         PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");
         br.close();
         br = new BufferedReader(new FileReader(archivo));
@@ -28,27 +29,36 @@ public class LectorArchivo {
                 nlinea = 1;
             }
             if (nlinea == 2) {
+                nucleotidos = new ArrayList();
+                indices = new ArrayList();
                 for (int i = 0; i < sCurrentLine.length(); i++) {
                     nucleotidos.add(sCurrentLine.charAt(i));
-                }
-            }
-            if (nlinea == 4) {
-                
-                char[] linea = sCurrentLine.toCharArray();
-                for (int i = 0; i < linea.length; i++) {
-                    if (linea[i] - 33 >= Q) {
-                       // System.out.println("caracter 'a' = " + (int)'‘');
-                        System.out.print("linea[i] = " +  linea[i] + "= " + (int)linea[i] + " ");
-                        System.out.print("Q[" + i + "]= " + (linea[i] -33) + " ");
-                        writer.print(nucleotidos.get(i));
+                    if (!checkLetter(sCurrentLine.charAt(i))) {
+                        indices.add(i);
                     }
                 }
-                
+                System.out.println(nucleotidos);
+                System.out.println(indices);
+            }
+            if (nlinea == 4) {
+                char[] linea = sCurrentLine.toCharArray();
+                for (int i = 0; i < linea.length; i++) {
+                    if (indices.contains(i)) {
+                        if (linea[i] - 33 >= Q) {
+                            System.out.print(nucleotidos.get(i));
+                            writer.print(nucleotidos.get(i));
+                        }
+                    }
+                }
                 writer.println("");
                 System.out.println("");
             }
         }
         writer.close();
+    }
+
+    public boolean checkLetter(char c) {
+        return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }
 
     /**
@@ -71,7 +81,7 @@ public class LectorArchivo {
                 count = 0;
                 //Comprueba que no tenga errores la cadena
                 for (int i = 0; i < array.length; i++) {
-                    if (array[i] != 'A' && array[i] != 'G' && array[i] != 'T' && array[i] != 'C') {
+                    if (checkLetter(array[i])) {
                         count++;
                         lineas.add(lineaError);
                     }
