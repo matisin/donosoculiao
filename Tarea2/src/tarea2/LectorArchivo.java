@@ -17,9 +17,10 @@ public class LectorArchivo {
     }
 
     public void descartarNucleotidos(int Q, String archivo) throws IOException {
-        int nlinea = 0;
+        int nlinea = 0, totalnucleotidos = 0,totalvalidos = 0,totalerrores = 0;
         ArrayList nucleotidos = new ArrayList();
         ArrayList indices = new ArrayList();
+        ArrayList ret = new ArrayList();
         PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");
         br.close();
         br = new BufferedReader(new FileReader(archivo));
@@ -36,7 +37,11 @@ public class LectorArchivo {
                     if (!checkLetter(sCurrentLine.charAt(i))) {
                         indices.add(i);
                     }
+                    else{
+                        totalerrores++;
+                    }
                 }
+                totalnucleotidos += nucleotidos.size();
                 System.out.println(nucleotidos);
                 System.out.println(indices);
             }
@@ -47,6 +52,7 @@ public class LectorArchivo {
                         if (linea[i] - 33 >= Q) {
                             System.out.print(nucleotidos.get(i));
                             writer.print(nucleotidos.get(i));
+                            totalvalidos++;
                         }
                     }
                 }
@@ -55,8 +61,19 @@ public class LectorArchivo {
             }
         }
         writer.close();
+        writer = new PrintWriter("Salida_Stats.txt", "UTF-8");
+        writer.println("Total Nucleotidos: " + totalnucleotidos);
+        writer.println("Total Válidos: " + totalvalidos);
+        writer.println("Total errores: " + totalerrores);
+        writer.println("Total Nucleotidos no válidos por Pe: " + (totalnucleotidos - totalvalidos - totalerrores));
+        writer.close();
     }
 
+    
+    public void contenidoGC(ArrayList nucleotidos){
+        
+    }
+    
     public boolean checkLetter(char c) {
         return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }

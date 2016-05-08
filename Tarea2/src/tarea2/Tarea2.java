@@ -19,7 +19,7 @@ public class Tarea2 {
     public static void main(String[] args) throws IOException {
         LectorArchivo la = new LectorArchivo("/home/diego/Documentos/UDEC/Sistemas Operativos/donosoculiao/Tarea2/src/tarea2/text");
         la.comprobarNucleotidos();
-        la.descartarNucleotidos(70,"/home/diego/Documentos/UDEC/Sistemas Operativos/donosoculiao/Tarea2/src/tarea2/text");
+        la.descartarNucleotidos(93,"/home/diego/Documentos/UDEC/Sistemas Operativos/donosoculiao/Tarea2/src/tarea2/text");
     }
 
 }

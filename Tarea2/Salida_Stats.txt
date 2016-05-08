@@ -1,0 +1,4 @@
+Total Nucleotidos: 100
+Total Válidos: 1
+Total errores: 2
+Total Nucleotidos no válidos por Pe: 97
