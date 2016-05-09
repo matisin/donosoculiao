@@ -17,9 +17,12 @@ public class Tarea2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        LectorArchivo la = new LectorArchivo("/home/diego/Documentos/UDEC/Sistemas Operativos/donosoculiao/Tarea2/src/tarea2/text");
+        LectorArchivo la = new LectorArchivo("text");
+        la.deletefile();
+        la.createfile();
         la.comprobarNucleotidos();
-        la.descartarNucleotidos(93,"/home/diego/Documentos/UDEC/Sistemas Operativos/donosoculiao/Tarea2/src/tarea2/text");
+        la.descartarNucleotidos(50,"text");
+        la.contenidoAT_GC();
     }
 
 }

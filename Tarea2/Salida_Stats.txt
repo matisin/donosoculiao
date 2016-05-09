@@ -1,4 +1,8 @@
 Total Nucleotidos: 100
-Total Válidos: 1
+Total Válidos: 92
 Total errores: 2
-Total Nucleotidos no válidos por Pe: 97
+Total Nucleotidos no válidos por Pe: 6
+Contenido Guanina y Citocina: 48.93617
+Contenido Adenina y Timina: 48.93617
+Razón AT/GC: 1.0
+Contenido GC: Moderado

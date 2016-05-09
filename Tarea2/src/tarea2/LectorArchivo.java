@@ -1,26 +1,40 @@
 package tarea2;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
+import static jdk.nashorn.internal.parser.TokenType.EOF;
 
 public class LectorArchivo {
 
     private BufferedReader br;
     private String sCurrentLine;
+    private PrintWriter stats;
 
     public LectorArchivo(String archivo) throws FileNotFoundException {
         this.br = new BufferedReader(new FileReader(archivo));
     }
 
+    public void createfile() throws FileNotFoundException{
+        stats = new PrintWriter(new FileOutputStream(new File("Salida_Stats.txt"), true /* append = true */));
+    }
+    public void deletefile() throws FileNotFoundException, IOException{
+        Path path = FileSystems.getDefault().getPath("Salida_Stats.txt");
+        Files.deleteIfExists(path);
+    }
     public void descartarNucleotidos(int Q, String archivo) throws IOException {
-        int nlinea = 0, totalnucleotidos = 0,totalvalidos = 0,totalerrores = 0;
+        int nlinea = 0, totalnucleotidos = 0, totalvalidos = 0, totalerrores = 0;
         ArrayList nucleotidos = new ArrayList();
         ArrayList indices = new ArrayList();
-        ArrayList ret = new ArrayList();
         PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");
         br.close();
         br = new BufferedReader(new FileReader(archivo));
@@ -36,8 +50,7 @@ public class LectorArchivo {
                     nucleotidos.add(sCurrentLine.charAt(i));
                     if (!checkLetter(sCurrentLine.charAt(i))) {
                         indices.add(i);
-                    }
-                    else{
+                    } else {
                         totalerrores++;
                     }
                 }
@@ -61,19 +74,51 @@ public class LectorArchivo {
             }
         }
         writer.close();
-        writer = new PrintWriter("Salida_Stats.txt", "UTF-8");
-        writer.println("Total Nucleotidos: " + totalnucleotidos);
-        writer.println("Total Válidos: " + totalvalidos);
-        writer.println("Total errores: " + totalerrores);
-        writer.println("Total Nucleotidos no válidos por Pe: " + (totalnucleotidos - totalvalidos - totalerrores));
-        writer.close();
+        stats.println("Total Nucleotidos: " + totalnucleotidos);
+        stats.println("Total Válidos: " + totalvalidos);
+        stats.println("Total errores: " + totalerrores);
+        stats.println("Total Nucleotidos no válidos por Pe: " + (totalnucleotidos - totalvalidos - totalerrores));
+        //stats.close();
     }
 
-    
-    public void contenidoGC(ArrayList nucleotidos){
-        
+    public void contenidoAT_GC() throws FileNotFoundException, IOException {
+        br.close();
+        br = new BufferedReader(new FileReader("Salida_Secuencias.txt"));
+        int G = 0, A = 0, T = 0, C = 0, total = 0, ch;
+        float contenidoGC, contenidoAT,razon;
+        char c;
+        while ((ch = br.read()) != -1) {
+            c = (char) ch;
+            System.out.print(c);
+            total++;
+            if (c == 'G') {
+                G++;
+            } else if (c == 'C') {
+                C++;
+            } else if (c == 'A') {
+                A++;
+            } else if (c == 'T') {
+                T++;
+            }
+        }
+        System.out.println(100 * (float)(G+C)/total);
+        contenidoGC = 100 * ((float)(G + C) / total);
+        contenidoAT = 100 * ((float)(A + T) / total);
+        razon = (float)(A + T) / (G + C);
+        stats.println("Contenido Guanina y Citocina: " + contenidoGC);
+        stats.println("Contenido Adenina y Timina: " + contenidoAT);
+        stats.println("Razón AT/GC: " + razon);
+        if (contenidoGC > 60) {
+            stats.println("Contenido GC: Alto");
+        } else if (contenidoGC < 40) {
+            stats.println("Contenido GC: Bajo");
+        } else {
+            stats.println("Contenido GC: Moderado");
+        }
+        stats.close();
+
     }
-    
+
     public boolean checkLetter(char c) {
         return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }
