@@ -11,8 +11,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
-import static jdk.nashorn.internal.parser.TokenType.EOF;
 
 public class LectorArchivo {
 
@@ -22,15 +20,9 @@ public class LectorArchivo {
 
     public LectorArchivo(String archivo) throws FileNotFoundException {
         this.br = new BufferedReader(new FileReader(archivo));
+        this.stats = new PrintWriter(new FileOutputStream(new File("Salida_Stats.txt"), false));
     }
-
-    public void createfile() throws FileNotFoundException{
-        stats = new PrintWriter(new FileOutputStream(new File("Salida_Stats.txt"), true /* append = true */));
-    }
-    public void deletefile() throws FileNotFoundException, IOException{
-        Path path = FileSystems.getDefault().getPath("Salida_Stats.txt");
-        Files.deleteIfExists(path);
-    }
+    
     public void descartarNucleotidos(int Q, String archivo) throws IOException {
         int nlinea = 0, totalnucleotidos = 0, totalvalidos = 0, totalerrores = 0;
         ArrayList nucleotidos = new ArrayList();
@@ -122,36 +114,7 @@ public class LectorArchivo {
     public boolean checkLetter(char c) {
         return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }
-
-    /**
-     * Verifica que la cadena de nucleótidos no contenga caracteres que no son
-     * validos, es decir, cualquiera que no sea A,G,T,C.
-     *
-     * @throws IOException
-     */
-    public void comprobarNucleotidos() throws IOException {
-        int count = 0, lineaError = 0, numLinea = 0;
-        ArrayList lineas = new ArrayList();
-        //Lee todo el archivo
-        while ((sCurrentLine = br.readLine()) != null) {
-            lineaError++;
-            if (sCurrentLine.startsWith("@")) {
-                numLinea = 1;
-            }
-            if (numLinea == 2) {
-                char[] array = sCurrentLine.toCharArray();
-                count = 0;
-                //Comprueba que no tenga errores la cadena
-                for (int i = 0; i < array.length; i++) {
-                    if (checkLetter(array[i])) {
-                        count++;
-                        lineas.add(lineaError);
-                    }
-                }
-            }
-            numLinea++;
-        }
-        System.out.println("La cadena de nucleótidos contiene " + count + " elementos no válidos en las líneas " + lineas);
-        br.close();
-    }
+   
+ 
+    
 }

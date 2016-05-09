@@ -18,9 +18,9 @@ public class Tarea2 {
      */
     public static void main(String[] args) throws IOException {
         LectorArchivo la = new LectorArchivo("text");
-        la.deletefile();
-        la.createfile();
-        la.comprobarNucleotidos();
+        //la.deletefile();
+       // la.createfile();
+        //la.comprobarNucleotidos();
         la.descartarNucleotidos(50,"text");
         la.contenidoAT_GC();
     }
