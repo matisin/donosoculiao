@@ -12,23 +12,40 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LectorArchivo {
+public class LectorArchivo extends Thread {
 
     private BufferedReader br;
     private String sCurrentLine;
     private PrintWriter stats;
+    private MonitorHebras mh;
+    private int id;
+    private static int number = 0;
 
-    public LectorArchivo() throws FileNotFoundException {        
-        this.stats = new PrintWriter(new FileOutputStream(new File("Salida_Stats.txt"), false));
+    public LectorArchivo(PrintWriter stats, MonitorHebras mh, Integer id) throws FileNotFoundException {        
+        this.stats = stats;
+        this.mh = mh;
+        this.id = id.intValue();
+        this.setName(new String(id.toString()));
+        
     }
     
-    public void descartarNucleotidos(int Q, String archivo) throws IOException {
+    public void run() {
+        try {
+            int nlinea = 0, totalnucleotidos = 0, totalvalidos = 0, totalerrores = 0;
+        } catch (InterruptedException e){
+            System.out.println("Error al producir : " + e.getMessage());
+        }
+    }
+    
+    public void descartarNucleotidos(double Pe, String archivo) throws IOException {
         int nlinea = 0, totalnucleotidos = 0, totalvalidos = 0, totalerrores = 0;
+        double Q = -10 * (Math.log10(Pe));
         ArrayList nucleotidos = new ArrayList();
         ArrayList indices = new ArrayList();
-        PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");    
     
         br = new BufferedReader(new FileReader(archivo));
+        
         while ((sCurrentLine = br.readLine()) != null) {
             nlinea++;
             if (sCurrentLine.startsWith("@")) {
@@ -65,6 +82,7 @@ public class LectorArchivo {
             }
         }
         writer.close();
+        stats.println("Pe ingresado: " + Pe);
         stats.println("Total Nucleotidos: " + totalnucleotidos);
         stats.println("Total Válidos: " + totalvalidos);
         stats.println("Total errores: " + totalerrores);
