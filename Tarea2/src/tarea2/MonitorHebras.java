@@ -16,7 +16,25 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MonitorHebras {
 
     private int numLects = 0, escribiendo = 0, escesperando = 0;
+    private int[] datos;
+    
+   /*0 totalnucleotidos,
+     1 totalvalidos, 
+     2 totalerrores;
+     3 A
+     4 G
+     5 C
+     6 T*/
 
+    public MonitorHebras() {
+        this.datos = new int[7];
+    }
+    public void acumulaDatos(int[] datos){
+        for(int i = 0 ; i < 7 ; i++){
+            this.datos[i] += datos[i];
+        }
+    }
+   
      
     public void puedeEscribir()throws InterruptedException {
        while(escribiendo != 0){
