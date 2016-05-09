@@ -18,8 +18,7 @@ public class LectorArchivo {
     private String sCurrentLine;
     private PrintWriter stats;
 
-    public LectorArchivo(String archivo) throws FileNotFoundException {
-        this.br = new BufferedReader(new FileReader(archivo));
+    public LectorArchivo() throws FileNotFoundException {        
         this.stats = new PrintWriter(new FileOutputStream(new File("Salida_Stats.txt"), false));
     }
     
@@ -28,7 +27,7 @@ public class LectorArchivo {
         ArrayList nucleotidos = new ArrayList();
         ArrayList indices = new ArrayList();
         PrintWriter writer = new PrintWriter("Salida_Secuencias.txt", "UTF-8");
-        br.close();
+    
         br = new BufferedReader(new FileReader(archivo));
         while ((sCurrentLine = br.readLine()) != null) {
             nlinea++;
@@ -71,10 +70,10 @@ public class LectorArchivo {
         stats.println("Total errores: " + totalerrores);
         stats.println("Total Nucleotidos no válidos por Pe: " + (totalnucleotidos - totalvalidos - totalerrores));
         //stats.close();
+        br.close();
     }
 
-    public void contenidoAT_GC() throws FileNotFoundException, IOException {
-        br.close();
+    public void contenidoAT_GC() throws FileNotFoundException, IOException {        
         br = new BufferedReader(new FileReader("Salida_Secuencias.txt"));
         int G = 0, A = 0, T = 0, C = 0, total = 0, ch;
         float contenidoGC, contenidoAT,razon;
@@ -108,10 +107,11 @@ public class LectorArchivo {
             stats.println("Contenido GC: Moderado");
         }
         stats.close();
+        br.close();
 
     }
 
-    public boolean checkLetter(char c) {
+    private boolean checkLetter(char c) {
         return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }
    

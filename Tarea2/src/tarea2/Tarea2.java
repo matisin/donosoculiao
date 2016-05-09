@@ -17,10 +17,7 @@ public class Tarea2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        LectorArchivo la = new LectorArchivo("text");
-        //la.deletefile();
-       // la.createfile();
-        //la.comprobarNucleotidos();
+        LectorArchivo la = new LectorArchivo();      
         la.descartarNucleotidos(50,"text");
         la.contenidoAT_GC();
     }
