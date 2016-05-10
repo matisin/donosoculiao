@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class MonitorHebras {
     //dos contadores, uno para escribir estadisticas y el otro para escribir el buffer.
-    private int escribiendo = 0, escesperando = 0;
+    private int escribiendo = 0,escribiendoBuffer = 0;
     private int[] datos;
     private char[] buffer;
     private int size,write;
@@ -46,14 +46,14 @@ public class MonitorHebras {
     //se escribe el archivo cuando se llene el buffer
     protected void escribirArchivo(){
         //escribimos todo el buffer
-        writerStatsSequencia.write(buffer, 0, size);
+        writerStatsSequencia.write(buffer, 0, size - 1);
         //volvemos a la posición 0
         write = 0;
     }
     //se escribe lo que quede en el buffer
     protected void cerrarArchivo(){
         //se escribe lo que hay hasta write.
-        writerStatsSequencia.write(buffer, 0, write - 1);
+        writerStatsSequencia.write(buffer, 0, write);
         writerStatsSequencia.close();
     }
     //se escriben los caracteres en el buffuer
@@ -78,14 +78,14 @@ public class MonitorHebras {
     }
     //entra en la cola si alguna hebra está escribiendo en el buffer
     public synchronized void puedeEscribirBuffer() throws InterruptedException{
-        while (escribiendo != 0) {
+        while (escribiendoBuffer != 0) {
             wait();
         }
-        escribiendo = 1;
+        escribiendoBuffer = 1;
     }
     //notifica a las hebras que libero el buffer en el monitor
     public synchronized void liberaEscribirBuffer() throws InterruptedException {
-        escribiendo = 0;
+        escribiendoBuffer = 0;
         notifyAll();
 
     }
