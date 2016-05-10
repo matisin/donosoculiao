@@ -1,0 +1,9 @@
+Pe ingresado: 0.001
+Total nucleótidos : 27000000
+Total válidos : 26980735
+Total errores : 19265
+Total válidos pero erroneos por Pe : 0
+Contenido GC: 43.05998706113825
+Contenido AT: 56.94001293886175
+Razón AT/GC: 1.3223416174746196
+ContenidoGC: Moderado
