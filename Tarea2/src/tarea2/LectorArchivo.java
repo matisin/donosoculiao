@@ -20,7 +20,7 @@ public class LectorArchivo extends Thread {
     private double Pe;
     private String archivo;
 
-    public LectorArchivo(PrintWriter stats, MonitorHebras mh, Integer id, double Pe, String archivo, int n_hebras) throws FileNotFoundException {
+    public LectorArchivo(MonitorHebras mh, Integer id, double Pe, String archivo, int n_hebras) throws FileNotFoundException {
         this.stats = stats;
         this.mh = mh;
         this.id = id.intValue();
@@ -75,6 +75,8 @@ public class LectorArchivo extends Thread {
                 br.readLine();
                 sCurrentLine = br.readLine();
                 char[] linea = sCurrentLine.toCharArray();
+                String seq = new String();
+                
                 for (int i = 0; i < linea.length; i++) {
                     if (indices.contains(i)) {
                         if (linea[i] - 33 >= Q) {
@@ -94,12 +96,17 @@ public class LectorArchivo extends Thread {
                                 default:
                                     break;
                             }
+                            seq = seq + (char) nucleotidos.get(i);
+                            
                             //escribe en el buffer//writer.print(nucleotidos.get(i));
                             totalvalidos++;
                         }
                     }
-                }
-                //escribe buffer//writer.println("");
+                }               
+                seq = seq + '\n';
+                mh.puedeEscribirBuffer();                
+                mh.writeBuffer(seq.toCharArray());
+                mh.liberaEscribirBuffer();
                 for (int i = 1; i < n_hebras; i++) {
                     br.readLine();
                     br.readLine();
