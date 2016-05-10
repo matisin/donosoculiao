@@ -27,11 +27,12 @@ public class LectorArchivo extends Thread {
         this.setName(new String(id.toString()));
         this.Pe = Pe;
         this.n_hebras = n_hebras;
+        this.archivo = archivo;
 
     }
 
-    public void run() { 
-       try {
+    public void run() {
+        try {
             int totalnucleotidos = 0, totalvalidos = 0, totalerrores = 0;
             double Q = -10 * (Math.log10(Pe));
             ArrayList nucleotidos;
@@ -41,20 +42,24 @@ public class LectorArchivo extends Thread {
                 br = new BufferedReader(new FileReader(archivo));
             } catch (IOException e) {
                 System.out.println("Error al leer archivo : " + e.getMessage());
+
             }
-            int A = 0, G = 0, C = 0, T = 0;
-            
+            int A = 0;
+            int G = 0;
+            int C = 0;
+            int T = 0;
+            for (int i = 1; i < id; i++) {
+                br.readLine();
+                br.readLine();
+                br.readLine();
+                br.readLine();
+                //System.out.println(id);
+            }
+
             while ((sCurrentLine = br.readLine()) != null) {
 
-                for (int i = 1; i < id; i++) {
-                    br.readLine();
-                    br.readLine();
-                    br.readLine();
-                    br.readLine();
-                }
                 //avanzamos linea 2
-                br.readLine();
-                br.readLine();
+                sCurrentLine = br.readLine();
                 nucleotidos = new ArrayList();
                 indices = new ArrayList();
                 for (int i = 0; i < sCurrentLine.length(); i++) {
@@ -68,19 +73,26 @@ public class LectorArchivo extends Thread {
                 totalnucleotidos += nucleotidos.size();
                 //avanzamos a la linea 4
                 br.readLine();
-                br.readLine();
+                sCurrentLine = br.readLine();
                 char[] linea = sCurrentLine.toCharArray();
                 for (int i = 0; i < linea.length; i++) {
                     if (indices.contains(i)) {
                         if (linea[i] - 33 >= Q) {
-                            if ((char)nucleotidos.get(i) == 'G') {
-                                G++;
-                            } else if ((char)nucleotidos.get(i) == 'C') {
-                                C++;
-                            } else if ((char)nucleotidos.get(i) == 'A') {
-                                A++;
-                            } else if ((char)nucleotidos.get(i) == 'T') {
-                                T++;
+                            switch ((char) nucleotidos.get(i)) {
+                                case 'G':
+                                    G++;
+                                    break;
+                                case 'C':
+                                    C++;
+                                    break;
+                                case 'A':
+                                    A++;
+                                    break;
+                                case 'T':
+                                    T++;
+                                    break;
+                                default:
+                                    break;
                             }
                             //escribe en el buffer//writer.print(nucleotidos.get(i));
                             totalvalidos++;
@@ -88,7 +100,7 @@ public class LectorArchivo extends Thread {
                     }
                 }
                 //escribe buffer//writer.println("");
-                 for (int i = 1; i < n_hebras; i++) {
+                for (int i = 1; i < n_hebras; i++) {
                     br.readLine();
                     br.readLine();
                     br.readLine();
@@ -96,8 +108,6 @@ public class LectorArchivo extends Thread {
                 }
 
             }
-
-            mh.puedeEscribir();
             int[] datos = new int[7];
             datos[0] = totalnucleotidos;
             datos[1] = totalvalidos;
@@ -106,7 +116,7 @@ public class LectorArchivo extends Thread {
             datos[4] = G;
             datos[5] = C;
             datos[6] = T;
-            mh.acumulaDatos(datos);
+            mh.puedeEscribir(datos);
             mh.liberaEscribir();
 
         } catch (InterruptedException e) {
@@ -114,7 +124,8 @@ public class LectorArchivo extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(LectorArchivo.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
+    }
+
     private boolean checkLetter(char c) {
         return c != 'A' && c != 'G' && c != 'T' && c != 'C';
     }

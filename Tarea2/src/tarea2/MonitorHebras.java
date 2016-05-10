@@ -28,24 +28,38 @@ public class MonitorHebras {
 
     public MonitorHebras() {
         this.datos = new int[7];
-    }
-    public void acumulaDatos(int[] datos){
+    }    
+    
+    private void acumulaDatos(int[] datos){
         for(int i = 0 ; i < 7 ; i++){
             this.datos[i] += datos[i];
         }
-    }
-   
+    }  
      
-    public void puedeEscribir()throws InterruptedException {
+    public synchronized void puedeEscribir(int[] datos)throws InterruptedException {
        while(escribiendo != 0){
            wait();
        }
-       escribiendo = 1;
+       escribiendo = 1;       
+       
+       acumulaDatos(datos);
     }
     
-    public void liberaEscribir() throws InterruptedException{
+    public synchronized void liberaEscribir() throws InterruptedException{
         escribiendo = 0;
         notifyAll();
+        
+    }
+    
+    public void imprime(){
+        System.out.println("Nucl : "+datos[0]);
+        System.out.println("Nucl valido : "+datos[1]);
+        System.out.println("err : "+datos[2]);
+        System.out.println("A : "+datos[3]);
+        System.out.println("G : "+datos[4]);
+        System.out.println("C : "+datos[5]);
+        System.out.println("T : "+datos[6]);
+        
         
     }
 
